@@ -29,6 +29,7 @@
 
 		<!-- entidade mapeada -->
 		<class>java.lang.String</class>
+        <class>api.model.Token</class>
 
 		<properties>
 			<!-- dados da conexao -->
