@@ -28,16 +28,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class CanvasController {
-	@RequestMapping(value = "/canvas/", method = RequestMethod.GET)
+	@RequestMapping(value = "/canvas", method = RequestMethod.GET)
 	public PixelCanvasResponse globalProfile(@RequestParam(value = "p") String p, @RequestParam(value = "token") String token) {
 		try {
 			if (Application.queue.contains(token)) {
-				return new PixelCanvasResponse(403, "");
+				return new PixelCanvasResponse(403, "Ratelimit excedido");
 			} else if (!MySQL.validateToken(token)) {
-				return new PixelCanvasResponse(403, "");
+				return new PixelCanvasResponse(403, "Token inválido");
 			}
 
-			if (p.split(";").length < 3) {
+			if (p.split(",").length < 3) {
 				return new PixelCanvasResponse(200, MySQL.getCanvas().getBase64Canvas());
 			}
 
@@ -48,7 +48,9 @@ public class CanvasController {
 			Application.queue.add(token);
 			return new PixelCanvasResponse(200, c.viewChunk(coords, zoom));
 		} catch (NumberFormatException e) {
-			return new PixelCanvasResponse(400, "");
+			return new PixelCanvasResponse(400, "As coordenadas e o zoom precisam ser valores numéricos separados por vírgula");
+		} catch (IllegalArgumentException e) {
+			return new PixelCanvasResponse(400, "O zoom deve ser um valor inteiro entre 1 e 10");
 		}
 	}
 
@@ -56,13 +58,13 @@ public class CanvasController {
 	public PixelCanvasResponse localProfile(@RequestParam(value = "p") String p, @RequestParam(value = "token") String token) {
 		try {
 			if (Application.queue.contains(token)) {
-				return new PixelCanvasResponse(403, "");
+				return new PixelCanvasResponse(403, "Ratelimit excedido");
 			} else if (!MySQL.validateToken(token)) {
-				return new PixelCanvasResponse(403, "");
+				return new PixelCanvasResponse(403, "Token inválido");
 			}
 
-			if (p.split(";").length < 3) {
-				return new PixelCanvasResponse(403, "");
+			if (p.split(",").length < 3) {
+				return new PixelCanvasResponse(403, "É necessário informar as coordenadas e a cor do pixel (hexadecimal sem #)");
 			}
 
 			int[] coords = new int[]{Integer.parseInt(p.split(";")[0]), Integer.parseInt(p.split(";")[1])};
@@ -72,7 +74,9 @@ public class CanvasController {
 			Application.queue.add(token);
 			return new PixelCanvasResponse(200, c.viewChunk(coords, zoom));
 		} catch (NumberFormatException e) {
-			return new PixelCanvasResponse(400, "");
+			return new PixelCanvasResponse(400, "As coordenadas precisam ser valores numéricos e a cor precisa ser um valor hexadecimal (sem #), todos separados por vírgula");
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return new PixelCanvasResponse(400, "Coordenadas fora da grade. As coordenadas devem estar dentra do intervalo de -512 à 512");
 		}
 	}
 }

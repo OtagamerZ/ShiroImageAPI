@@ -55,7 +55,8 @@ public class PixelCanvas {
 		return null;
 	}
 
-	public String viewChunk(int[] coords, int zoom) {
+	public String viewChunk(int[] coords, int zoom) throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
+		if (zoom <= 0 || zoom > 10) throw new IllegalArgumentException();
 		int fac = (int) Math.pow(2, zoom);
 		int chunkSize = CANVAS_SIZE / fac;
 		try {
@@ -80,7 +81,7 @@ public class PixelCanvas {
 		return "";
 	}
 
-	public String addPixel(int[] coords, Color color) {
+	public String addPixel(int[] coords, Color color) throws ArrayIndexOutOfBoundsException {
 		BufferedImage canvas = getCanvas();
 		canvas.setRGB(coords[0] + CANVAS_SIZE / 2, CANVAS_SIZE / 2 - coords[1], color.getRGB());
 		saveCanvas(canvas);
