@@ -18,11 +18,19 @@
 package api.model;
 
 public class PixelCanvasResponse {
-	private final int code;
-	private final String image;
+	private int code;
+	private String image;
 
 	public PixelCanvasResponse(int code, String image) {
 		this.code = code;
 		this.image = image;
+	}
+
+	public int getCode() {
+		return code;
+	}
+
+	public String getImage() {
+		return image;
 	}
 }
