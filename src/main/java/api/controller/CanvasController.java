@@ -39,14 +39,14 @@ public class CanvasController {
 
 			if (p.split(",").length < 3) {
 				return new PixelCanvasResponse(200, MySQL.getCanvas().getBase64Canvas());
+			} else {
+				int[] coords = new int[]{Integer.parseInt(p.split(";")[0]), Integer.parseInt(p.split(";")[1])};
+				int zoom = Integer.parseInt(p.split(";")[2]);
+				PixelCanvas c = MySQL.getCanvas();
+
+				Application.queue.add(token);
+				return new PixelCanvasResponse(200, c.viewChunk(coords, zoom));
 			}
-
-			int[] coords = new int[]{Integer.parseInt(p.split(";")[0]), Integer.parseInt(p.split(";")[1])};
-			int zoom = Integer.parseInt(p.split(";")[2]);
-			PixelCanvas c = MySQL.getCanvas();
-
-			Application.queue.add(token);
-			return new PixelCanvasResponse(200, c.viewChunk(coords, zoom));
 		} catch (NumberFormatException e) {
 			return new PixelCanvasResponse(400, "As coordenadas e o zoom precisam ser valores numéricos separados por vírgula");
 		} catch (IllegalArgumentException e) {
