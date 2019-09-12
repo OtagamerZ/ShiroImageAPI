@@ -17,12 +17,10 @@
 
 package api.database;
 
+import api.model.PixelCanvas;
 import api.model.Profile;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,5 +68,27 @@ public class MySQL {
 
 		em.close();
 		return p;
+	}
+
+	public static PixelCanvas getCanvas() throws NoResultException {
+		EntityManager em = getEntityManager();
+
+		Query q = em.createQuery("SELECT c FROM PixelCanvas c WHERE shelved = 0", PixelCanvas.class);
+		q.setMaxResults(1);
+
+		PixelCanvas c = (PixelCanvas) q.getSingleResult();
+		em.close();
+
+		return c;
+	}
+
+	public static void saveCanvas(PixelCanvas canvas) {
+		EntityManager em = getEntityManager();
+
+		em.getTransaction().begin();
+		em.merge(canvas);
+		em.getTransaction().commit();
+
+		em.close();
 	}
 }
