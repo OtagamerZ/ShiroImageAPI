@@ -55,6 +55,31 @@ public class PixelCanvas {
 		return null;
 	}
 
+	public String viewChunk(int[] coords, int zoom) {
+		int fac = (int) Math.pow(2, zoom);
+		int chunkSize = CANVAS_SIZE / fac;
+		try {
+			BufferedImage chunk = new BufferedImage(CANVAS_SIZE, CANVAS_SIZE, BufferedImage.TYPE_INT_RGB);
+			BufferedImage canvas = new BufferedImage(CANVAS_SIZE + chunkSize, CANVAS_SIZE + chunkSize, BufferedImage.TYPE_INT_RGB);
+			Graphics2D g2d = canvas.createGraphics();
+
+			g2d.drawImage(getCanvas(), (canvas.getWidth() / 2) - CANVAS_SIZE / 2, (canvas.getHeight() / 2) - CANVAS_SIZE / 2, null);
+
+			g2d = chunk.createGraphics();
+			int x = (CANVAS_SIZE / 2 / fac) + (coords[0] + CANVAS_SIZE / 2) - (chunkSize / 2);
+			int y = (CANVAS_SIZE / 2 / fac) + (CANVAS_SIZE / 2 - coords[1]) - (chunkSize / 2);
+			g2d.drawImage(canvas.getSubimage(x, y, chunkSize, chunkSize).getScaledInstance(CANVAS_SIZE, CANVAS_SIZE, 0), 0, 0, null);
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(chunk, "png", baos);
+
+			return Base64.getEncoder().encodeToString(baos.toByteArray());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
 	public String addPixel(int[] coords, Color color) {
 		BufferedImage canvas = getCanvas();
 		canvas.setRGB(coords[0] + CANVAS_SIZE / 2, CANVAS_SIZE / 2 - coords[1], color.getRGB());

@@ -21,21 +21,17 @@ import api.Application;
 import api.database.MySQL;
 import api.model.PixelCanvas;
 import api.model.PixelCanvasResponse;
-import api.model.Token;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.persistence.NoResultException;
-import java.awt.*;
 
 @RestController
 public class CanvasController {
 	@RequestMapping(value = "/canvas/", method = RequestMethod.GET)
 	public PixelCanvasResponse globalProfile(@RequestParam(value = "p") String p, @RequestParam(value = "token") String token) {
 		try {
-			if (Application.queue.containsKey(token)) {
+			if (Application.queue.contains(token)) {
 				return new PixelCanvasResponse(403, "");
 			} else if (!MySQL.validateToken(token)) {
 				return new PixelCanvasResponse(403, "");
@@ -45,17 +41,38 @@ public class CanvasController {
 				return new PixelCanvasResponse(200, MySQL.getCanvas().getBase64Canvas());
 			}
 
-			int[] coords = new int[]{Integer.parseInt(p.split(";")[0]), Integer.parseInt(p.split(";")[1]), Integer.parseInt(p.split(";")[2])};
+			int[] coords = new int[]{Integer.parseInt(p.split(";")[0]), Integer.parseInt(p.split(";")[1])};
+			int zoom = Integer.parseInt(p.split(";")[2]);
 			PixelCanvas c = MySQL.getCanvas();
 
-
+			Application.queue.add(token);
+			return new PixelCanvasResponse(200, c.viewChunk(coords, zoom));
 		} catch (NumberFormatException e) {
 			return new PixelCanvasResponse(400, "");
 		}
 	}
 
 	@RequestMapping(value = "/canvas/pixel", method = RequestMethod.GET)
-	public PixelCanvasResponse localProfile(@RequestParam(value = "p") String id) {
+	public PixelCanvasResponse localProfile(@RequestParam(value = "p") String p, @RequestParam(value = "token") String token) {
+		try {
+			if (Application.queue.contains(token)) {
+				return new PixelCanvasResponse(403, "");
+			} else if (!MySQL.validateToken(token)) {
+				return new PixelCanvasResponse(403, "");
+			}
 
+			if (p.split(";").length < 3) {
+				return new PixelCanvasResponse(403, "");
+			}
+
+			int[] coords = new int[]{Integer.parseInt(p.split(";")[0]), Integer.parseInt(p.split(";")[1])};
+			int zoom = Integer.parseInt(p.split(";")[2]);
+			PixelCanvas c = MySQL.getCanvas();
+
+			Application.queue.add(token);
+			return new PixelCanvasResponse(200, c.viewChunk(coords, zoom));
+		} catch (NumberFormatException e) {
+			return new PixelCanvasResponse(400, "");
+		}
 	}
 }
