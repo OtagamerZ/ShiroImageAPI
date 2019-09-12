@@ -19,6 +19,7 @@ package api.database;
 
 import api.model.PixelCanvas;
 import api.model.Profile;
+import api.model.Token;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -90,5 +91,27 @@ public class MySQL {
 		em.getTransaction().commit();
 
 		em.close();
+	}
+
+	public static boolean validateToken(String token) {
+		EntityManager em = getEntityManager();
+
+		Query q = em.createQuery("SELECT t FROM Token t WHERE token LIKE ?1", Token.class);
+		q.setParameter(1, token);
+		q.setMaxResults(1);
+
+		try {
+			Token t = (Token) q.getSingleResult();
+
+			em.getTransaction().begin();
+			em.merge(t.addCall());
+			em.getTransaction().commit();
+
+			em.close();
+
+			return true;
+		} catch (NoResultException e) {
+			return false;
+		}
 	}
 }

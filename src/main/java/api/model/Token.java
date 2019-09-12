@@ -15,19 +15,33 @@
  *     along with Shiro J Bot.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package api;
+package api.model;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-import java.util.HashMap;
-import java.util.Map;
+@Entity
+public class Token {
+	@Id
+	private int id;
+	@Column(columnDefinition = "String default \"\"")
+	private String token;
+	@Column(columnDefinition = "String default \"\"")
+	private String holder;
+	@Column(columnDefinition = "Integer default 0")
+	private int calls;
 
-@SpringBootApplication
-public class Application {
-	public static final Map<String, String> queue = new HashMap<>();
+	public String getToken() {
+		return token;
+	}
 
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+	public String getHolder() {
+		return holder;
+	}
+
+	public Token addCall() {
+		calls++;
+		return this;
 	}
 }
