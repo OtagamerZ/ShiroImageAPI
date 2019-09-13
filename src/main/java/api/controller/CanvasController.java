@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.awt.*;
 import java.util.Arrays;
 
 @RestController
@@ -72,12 +73,12 @@ public class CanvasController {
 				return new PixelCanvasResponse(403, "É necessário informar as coordenadas e a cor do pixel (hexadecimal sem #)");
 			}
 
-			int[] coords = new int[]{Integer.parseInt(p.split(";")[0]), Integer.parseInt(p.split(";")[1])};
-			int zoom = Integer.parseInt(p.split(";")[2]);
+			int[] coords = new int[]{Integer.parseInt(p.split(",")[0]), Integer.parseInt(p.split(",")[1])};
+			Color color = Color.decode(p.split(",")[2]);
 			PixelCanvas c = MySQL.getCanvas();
 
 			Application.queue.add(token);
-			return new PixelCanvasResponse(200, c.viewChunk(coords, zoom));
+			return new PixelCanvasResponse(200, c.addPixel(coords, color));
 		} catch (NumberFormatException e) {
 			return new PixelCanvasResponse(400, "As coordenadas precisam ser valores numéricos e a cor precisa ser um valor hexadecimal (sem #), todos separados por vírgula");
 		} catch (ArrayIndexOutOfBoundsException e) {
