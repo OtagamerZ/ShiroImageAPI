@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class CanvasController {
 	@RequestMapping(value = "/canvas", method = RequestMethod.GET)
 	public PixelCanvasResponse globalProfile(@RequestParam(value = "p") String p, @RequestParam(value = "token") String token) {
+		System.out.println(p);
+		System.out.println(token);
 		try {
 			if (Application.queue.contains(token)) {
 				return new PixelCanvasResponse(403, "Ratelimit excedido");
