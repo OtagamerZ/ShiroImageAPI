@@ -53,7 +53,6 @@ public class CanvasController {
 		} catch (NumberFormatException e) {
 			return new PixelCanvasResponse(400, "As coordenadas e o zoom precisam ser valores numéricos separados por vírgula");
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
 			return new PixelCanvasResponse(400, "O zoom deve ser um valor inteiro entre 1 e 10");
 		}
 	}
