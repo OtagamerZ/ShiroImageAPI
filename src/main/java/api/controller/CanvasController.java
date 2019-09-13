@@ -26,12 +26,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+
 @RestController
 public class CanvasController {
 	@RequestMapping(value = "/canvas", method = RequestMethod.GET)
 	public PixelCanvasResponse globalProfile(@RequestParam(value = "p") String p, @RequestParam(value = "token") String token) {
-		System.out.println(p);
-		System.out.println(token);
 		try {
 			if (Application.queue.contains(token)) {
 				return new PixelCanvasResponse(403, "Ratelimit excedido");
@@ -39,10 +39,11 @@ public class CanvasController {
 				return new PixelCanvasResponse(403, "Token inválido");
 			}
 
+			System.out.println(Arrays.toString(p.split(",")));
 			if (p.split(",").length < 3) {
 				return new PixelCanvasResponse(200, MySQL.getCanvas().getBase64Canvas());
 			} else {
-				int[] coords = new int[]{Integer.parseInt(p.split(";")[0]), Integer.parseInt(p.split(";")[1])};
+				int[] coords = new int[]{Integer.parseInt(p.split(",")[0]), Integer.parseInt(p.split(",")[1])};
 				int zoom = Integer.parseInt(p.split(";")[2]);
 				PixelCanvas c = MySQL.getCanvas();
 
@@ -52,6 +53,7 @@ public class CanvasController {
 		} catch (NumberFormatException e) {
 			return new PixelCanvasResponse(400, "As coordenadas e o zoom precisam ser valores numéricos separados por vírgula");
 		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
 			return new PixelCanvasResponse(400, "O zoom deve ser um valor inteiro entre 1 e 10");
 		}
 	}
