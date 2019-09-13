@@ -31,7 +31,7 @@ import java.util.Arrays;
 @RestController
 public class CanvasController {
 	@RequestMapping(value = "/canvas", method = RequestMethod.GET)
-	public PixelCanvasResponse globalProfile(@RequestParam(value = "p") String p, @RequestParam(value = "token") String token) {
+	public PixelCanvasResponse getCanvas(@RequestParam(value = "p") String p, @RequestParam(value = "token") String token) {
 		try {
 			if (Application.queue.contains(token)) {
 				return new PixelCanvasResponse(403, "Ratelimit excedido");
@@ -44,7 +44,7 @@ public class CanvasController {
 				return new PixelCanvasResponse(200, MySQL.getCanvas().getBase64Canvas());
 			} else {
 				int[] coords = new int[]{Integer.parseInt(p.split(",")[0]), Integer.parseInt(p.split(",")[1])};
-				int zoom = Integer.parseInt(p.split(";")[2]);
+				int zoom = Integer.parseInt(p.split(",")[2]);
 				PixelCanvas c = MySQL.getCanvas();
 
 				Application.queue.add(token);
@@ -58,7 +58,7 @@ public class CanvasController {
 	}
 
 	@RequestMapping(value = "/canvas/pixel", method = RequestMethod.GET)
-	public PixelCanvasResponse localProfile(@RequestParam(value = "p") String p, @RequestParam(value = "token") String token) {
+	public PixelCanvasResponse paintCanvas(@RequestParam(value = "p") String p, @RequestParam(value = "token") String token) {
 		try {
 			if (Application.queue.contains(token)) {
 				return new PixelCanvasResponse(403, "Ratelimit excedido");
