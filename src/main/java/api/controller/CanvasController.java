@@ -76,9 +76,11 @@ public class CanvasController {
 			int[] coords = new int[]{Integer.parseInt(p.split(",")[0]), Integer.parseInt(p.split(",")[1])};
 			Color color = Color.decode("#" + p.split(",")[2]);
 			PixelCanvas c = MySQL.getCanvas();
+			PixelCanvasResponse response = new PixelCanvasResponse(200, c.addPixel(coords, color));
+			MySQL.saveCanvas(c);
 
 			Application.queue.add(token);
-			return new PixelCanvasResponse(200, c.addPixel(coords, color));
+			return response;
 		} catch (NumberFormatException e) {
 			return new PixelCanvasResponse(400, "As coordenadas precisam ser valores numéricos e a cor precisa ser um valor hexadecimal (sem #), todos separados por vírgula");
 		} catch (ArrayIndexOutOfBoundsException e) {
