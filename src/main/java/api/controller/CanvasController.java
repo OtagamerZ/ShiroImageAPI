@@ -54,6 +54,8 @@ public class CanvasController {
 			return new PixelCanvasResponse(400, "As coordenadas e o zoom precisam ser valores numéricos separados por vírgula");
 		} catch (IllegalArgumentException e) {
 			return new PixelCanvasResponse(400, "O zoom deve ser um valor inteiro entre 1 e 10");
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return new PixelCanvasResponse(400, "Coordenadas fora da grade. As coordenadas devem estar dentra do intervalo de -512 à 512");
 		}
 	}
 
