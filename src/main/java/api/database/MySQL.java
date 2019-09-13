@@ -96,7 +96,8 @@ public class MySQL {
 	public static boolean validateToken(String token) {
 		EntityManager em = getEntityManager();
 
-		Query q = em.createQuery("SELECT t FROM Token t WHERE token LIKE \"" + token + "\"", Token.class);
+		Query q = em.createQuery("SELECT t FROM Token t WHERE token LIKE :token", Token.class);
+		q.setParameter("token", token);
 		q.setMaxResults(1);
 
 		try {
