@@ -74,7 +74,7 @@ public class CanvasController {
 			}
 
 			int[] coords = new int[]{Integer.parseInt(p.split(",")[0]), Integer.parseInt(p.split(",")[1])};
-			Color color = Color.decode(p.split(",")[2]);
+			Color color = Color.decode("#" + p.split(",")[2]);
 			PixelCanvas c = MySQL.getCanvas();
 
 			Application.queue.add(token);
