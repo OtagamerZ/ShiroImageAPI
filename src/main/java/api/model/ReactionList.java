@@ -118,7 +118,6 @@ class ReactionList {
 	static Object[] slap() {
 		String[] url = new String[]{
 				"https://i.imgur.com/23dwi5X.gif",
-				"https://i.imgur.com/ok1eDJv.gif",
 				"https://i.imgur.com/jiYtyNm.gif",
 				"https://i.imgur.com/HJ9k2iv.gif",
 				"https://strikninene.files.wordpress.com/2015/05/dfrag.gif",
