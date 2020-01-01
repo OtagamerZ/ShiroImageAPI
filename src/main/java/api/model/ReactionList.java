@@ -277,7 +277,6 @@ class ReactionList {
 				"https://thumbs.gfycat.com/ConsiderateFrighteningAzurevasesponge-size_restricted.gif",
 				"https://i.pinimg.com/originals/99/69/1e/99691e08eecade2f575b272eda7c2d2a.gif",
 				"https://images-ext-1.discordapp.net/external/-N8kY9KRZHf2lAnXX1Ux3ObNmP3IvpcFAupRlz4SL04/https/i.pinimg.com/originals/25/2d/72/252d72cfae7f6336185410bb81ae8248.gif",
-				"https://images-ext-1.discordapp.net/external/rW-FsPXjmkr4A0ZGupeCUrE3Nv1exAKbgHQLCb1O6g0/https/media.tenor.com/images/616dcf3690e7edfac70c0e02c6d73559/tenor.gif",
 				"https://images-ext-1.discordapp.net/external/ypr7byUbHyKYm5nsV1y4hnPUu_xaoWVOtctxWs_-2Ps/http/pa1.narvii.com/5922/1e52bb4412287e69fb9ac2a8b35970730bc2a0a1_00.gif"
 
 		};
