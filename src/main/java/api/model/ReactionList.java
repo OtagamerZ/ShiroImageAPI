@@ -222,7 +222,6 @@ class ReactionList {
 				"https://media3.giphy.com/media/CiMROUysDeuze/source.gif",
 				"https://data.whicdn.com/images/85031535/original.gif",
 				"https://i.imgur.com/KwuchrB.gif",
-				"https://media.giphy.com/media/tZmWHlQT36oZW/giphy.gif",
 				"https://images-ext-1.discordapp.net/external/N2MopBOuNx_2ypTae1Dcre9vBxX4aHnubQgq_jqhwE0/https/i.pinimg.com/originals/03/0e/fe/030efe9e85248b4911d8e7035a487114.gif",
 				"https://images-ext-1.discordapp.net/external/uuLj_PvI9X1ZRzbHkJ_XmUiW1MKWEXyLNTtxzEYTDiY/https/pa1.narvii.com/6226/f1e4e5d1a26c35a2754cbdde0f11c23c5ec51060_hq.gif",
 				"https://images-ext-2.discordapp.net/external/akLSWq1xvSBkH-Yne6qivo1iE_XNQdR9R33BjsFaVj4/https/uploads.spiritfanfiction.com/fanfics/capitulos/201606/fanfiction-originais-ela-que-me-mudou-5729406-060620161504.gif"
