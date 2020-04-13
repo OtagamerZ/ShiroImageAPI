@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-	compile 'mysql:mysql-connector-java'
+	compile 'org.postgresql:postgresql:42.2.12'
 	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.6.RELEASE'
 	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.6.RELEASE'
