@@ -18,8 +18,8 @@
 package api.model;
 
 public class Reaction {
-	private final int id;
-	private final String url;
+	private int id;
+	private String url;
 
 	public Reaction(int id, String url) {
 		this.id = id;
@@ -30,7 +30,15 @@ public class Reaction {
 		return id;
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getUrl() {
 		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }
