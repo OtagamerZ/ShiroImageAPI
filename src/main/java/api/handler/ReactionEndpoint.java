@@ -43,7 +43,7 @@ public class ReactionEndpoint {
 			assert content != null;
 			List<String> reactions = new ArrayList<>();
 			for (File file : content) {
-				if (file.isFile())
+				if (file.isFile() && !file.getName().startsWith("."))
 					reactions.add(file.getName());
 			}
 
