@@ -1,2 +1,2 @@
-# ShiroJBot
-Repositorio oficial da versão Java da bot Shiro
+# ShiroImageAPI
+Repositorio oficial da API de GIFs da versão Java da bot Shiro
