@@ -26,36 +26,7 @@ import java.util.concurrent.Executors;
 
 @SpringBootApplication
 public class Application {
-	public static final List<String> queue = new ArrayList<>();
-
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
-		Executors.newSingleThreadExecutor().execute(() -> {
-			Thread.currentThread().setName("Canvas-Thread");
-			//noinspection InfiniteLoopStatement
-			while (true) {
-				if (queue.size() > 10) {
-					try {
-						Thread.sleep(5000);
-						queue.remove(0);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				} else if (queue.size() > 0) {
-					try {
-						Thread.sleep(3000);
-						queue.remove(0);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				} else {
-					try {
-						Thread.sleep(3000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
 	}
 }

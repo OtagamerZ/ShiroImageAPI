@@ -15,23 +15,42 @@
  *     along with Shiro J Bot.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package api.controller;
+package api.handler;
 
 import api.model.Reaction;
-import api.model.ReactionType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 @RestController
-public class ReactionController {
+public class ReactionEndpoint {
+	private static final String BASE_PATH = "https://raw.githubusercontent.com/OtagamerZ/ShiroImageAPI/master/src/main/resources/reactions/%s/%s";
+
 	@RequestMapping(value = "/reaction", method = RequestMethod.GET)
-	public Reaction reaction(@RequestParam(value = "type", defaultValue = "404") String type) {
+	public Reaction reaction(@RequestParam(value = "type") String type) {
 		try {
-			return new Reaction(ReactionType.valueOf(type.toUpperCase()));
+			URL path = this.getClass().getClassLoader().getResource("reactions/" + type);
+			if (path == null) return new Reaction(404, BASE_PATH.formatted("notfound", "404.gif"));
+
+			File[] content = new File(path.getFile()).listFiles();
+			assert content != null;
+			List<String> reactions = new ArrayList<>();
+			for (File file : content) {
+				if (file.isFile())
+					reactions.add(file.getName());
+			}
+
+			int index = new Random().nextInt(reactions.size());
+			return new Reaction(index, BASE_PATH.formatted(type, reactions.get(index)));
 		} catch (IllegalArgumentException e) {
-			return new Reaction(ReactionType.NOTFOUND);
+			return new Reaction(404, BASE_PATH.formatted("notfound", "404.gif"));
 		}
 	}
 }
