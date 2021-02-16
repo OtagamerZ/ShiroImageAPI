@@ -9,7 +9,8 @@ for i in $path; do
         height="$(cut -d'x' -f2 <<< "$size")";
         if [ "$width" -lt 400 ] || [ "$height" -lt 200 ]; then
             rm "$img";
+        else
+            mv "$img" "$img"_rev
         fi
-        mv "$img" "$img"_rev
     done
 done
