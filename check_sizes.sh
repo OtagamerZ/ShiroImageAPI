@@ -8,7 +8,7 @@ for i in $path; do
         width="$(cut -d';' -f1 <<< "$size")";
         height="$(cut -d';' -f2 <<< "$size")";
         if [ "$width" -lt 400 ] || [ "$height" -lt 200 ]; then
-            echo "$size";
+            echo "$size\n";
         fi
     done
 done
