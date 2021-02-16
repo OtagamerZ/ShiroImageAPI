@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 path='src/main/resources/reactions';
 for i in $path; do
