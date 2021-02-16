@@ -8,7 +8,8 @@ for i in $path; do
         width="$(cut -d'x' -f1 <<< "$size")";
         height="$(cut -d'x' -f2 <<< "$size")";
         if [ "$width" -lt 400 ] || [ "$height" -lt 200 ]; then
-            echo "$size";
+            rm "$img";
         fi
+        mv "$img" "$img"_rev
     done
 done
