@@ -13,4 +13,11 @@ for i in $path; do
             mv "$img" "$img"_rev
         fi
     done
+
+    for img in "$i"/*.gif; do
+        i=1;
+
+        mv "$img" "$(printf "$path/%0.3d.gif" $i)";
+        i=$((i + 1))
+    done
 done
