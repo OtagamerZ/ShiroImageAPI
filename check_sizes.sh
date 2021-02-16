@@ -3,12 +3,11 @@
 path='src/main/resources/reactions/*';
 for i in $path; do
     for img in "$i"/*.gif; do
-        size="$(identify -format '%w;%h' "$img")";
+        size="$(convert "$img" -print "%wx%h" /dev/null)";
 
-        width="$(cut -d';' -f1 <<< "$size")";
-        height="$(cut -d';' -f2 <<< "$size")";
+        width="$(cut -d'x' -f1 <<< "$size")";
+        height="$(cut -d'x' -f2 <<< "$size")";
         if [ "$width" -lt 400 ] || [ "$height" -lt 200 ]; then
-            echo $img;
             echo "$size";
         fi
     done
