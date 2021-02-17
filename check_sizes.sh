@@ -46,7 +46,7 @@ for i in $path; do
 		i=$((i + 1))
 	done
 
-	echo >> .checked
+	echo >> "$i"/.checked
 done
 
 echo 'Checked: '"$checked"' files'
