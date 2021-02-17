@@ -42,7 +42,7 @@ for i in $path; do
 	for img in "$i"/*.rev; do
 		dir="$(dirname "$img")"
 
-		mv "$img" "$(printf "$dir/%0.3d.gif" $i)"
+		mv "$img" "$(printf "$dir/%0.3d.gif" $n)"
 		n=$((n + 1))
 	done
 
