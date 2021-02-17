@@ -7,6 +7,11 @@ failed=0
 
 shopt -s nullglob
 for i in $path; do
+	if [ ! -s ".checked" ]; then
+		echo 'Folder already checked. Skipping'
+		continue
+	fi
+
 	shopt -s nullglob
 	for img in "$i"/*.gif; do
 		filename="$(basename "$img" .gif)"
@@ -34,12 +39,14 @@ for i in $path; do
 
 	shopt -s nullglob
 	for img in "$i"/*.rev; do
-		dir="$(dirname img)"
+		dir="$(dirname "$img")"
 		i=0
 
 		mv "$img" "$(printf "$dir/%0.3d.gif" $i)"
 		i=$((i + 1))
 	done
+
+	echo >> .checked
 done
 
 echo 'Checked: '"$checked"' files'
