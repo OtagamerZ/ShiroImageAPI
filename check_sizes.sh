@@ -9,7 +9,7 @@ shopt -s nullglob
 for i in $path; do
 	shopt -s nullglob
 	for img in "$i"/*.gif; do
-		filename="$(basename "$img")"
+		filename="$(basename "$img" .gif)"
 		dir="$(dirname "$img")"
 		size="$(convert "$img" -print "%wx%h" /dev/null || echo 'fail')"
 
