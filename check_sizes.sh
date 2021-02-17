@@ -5,6 +5,8 @@ shopt -s nullglob
 for i in $path; do
     shopt -s nullglob
     for img in "$i"/*.gif; do
+        filename="$(basename img)";
+        dir="$(dirname img)";
         size="$(convert "$img" -print "%wx%h" /dev/null)";
 
         width="$(cut -d'x' -f1 <<< "$size")";
@@ -14,15 +16,16 @@ for i in $path; do
             rm "$img";
         else
             echo 'Checked '"$img";
-            mv "$img" "$img"_rev
+            mv "$img" "$dir"/"$filename".rev
         fi
     done
 
     shopt -s nullglob
-    for img in "$i"/*.gif_rev; do
+    for img in "$i"/*.rev; do
+        dir="$(dirname img)";
         i=1;
 
-        mv "$img" "$(printf "$path/%0.3d.gif" $i)";
+        mv "$img" "$(printf "$dir/%0.3d.gif" $i)";
         i=$((i + 1))
     done
 done
