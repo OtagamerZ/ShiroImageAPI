@@ -37,13 +37,13 @@ for i in $path; do
 		fi
 	done
 
-	i=0
+	n=0
 	shopt -s nullglob
 	for img in "$i"/*.rev; do
 		dir="$(dirname "$img")"
 
 		mv "$img" "$(printf "$dir/%0.3d.gif" $i)"
-		i=$((i + 1))
+		n=$((n + 1))
 	done
 
 	echo >> "$i"/.checked
