@@ -37,7 +37,7 @@ public class ReactionEndpoint {
 	public Reaction reaction(@RequestParam(value = "type") String type) {
 		try {
 			URL path = this.getClass().getClassLoader().getResource("reactions/" + type);
-			if (path == null) return new Reaction(404, BASE_PATH.formatted("notfound", "000.gif"));
+			if (path == null) return new Reaction(0, BASE_PATH.formatted("notfound", "000.gif"));
 
 			File[] content = new File(path.getFile()).listFiles();
 			assert content != null;
@@ -50,7 +50,7 @@ public class ReactionEndpoint {
 			int index = new Random().nextInt(reactions.size());
 			return new Reaction(index, BASE_PATH.formatted(type, reactions.get(index)));
 		} catch (IllegalArgumentException e) {
-			return new Reaction(404, BASE_PATH.formatted("notfound", "404.gif"));
+			return new Reaction(0, BASE_PATH.formatted("notfound", "000.gif"));
 		}
 	}
 }
