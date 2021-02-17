@@ -37,10 +37,10 @@ for i in $path; do
 		fi
 	done
 
+	i=0
 	shopt -s nullglob
 	for img in "$i"/*.rev; do
 		dir="$(dirname "$img")"
-		i=0
 
 		mv "$img" "$(printf "$dir/%0.3d.gif" $i)"
 		i=$((i + 1))
