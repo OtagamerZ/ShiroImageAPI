@@ -7,13 +7,9 @@ for i in $path; do
 	for img in "$i"/*.gif; do
 		filename="$(basename img)"
 		dir="$(dirname img)"
-		size="$({
-			convert "$img" -print "%wx%h" /dev/null
-		} || {
-			echo 'fail'
-		})"
+		size="$(convert "$img" -print "%wx%h" /dev/null || echo 'fail')"
 
-		if [[ "$size" == 'fail' ]]; then
+		if [[ "$size" == "fail" ]]; then
 			echo 'Invalid '"$img"
 			rm "$img"
 		else
