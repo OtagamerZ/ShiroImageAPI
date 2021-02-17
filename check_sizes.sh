@@ -7,7 +7,7 @@ failed=0
 
 shopt -s nullglob
 for i in $path; do
-	if [ ! -s ".checked" ]; then
+	if [ ! -s "$i"/.checked ]; then
 		echo 'Folder already checked. Skipping'
 		continue
 	fi
