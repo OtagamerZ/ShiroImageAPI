@@ -34,7 +34,7 @@ public class ReactionEndpoint {
 	private static final String BASE_PATH = "https://raw.githubusercontent.com/OtagamerZ/ShiroImageAPI/master/src/main/resources/reactions/%s/%s";
 
 	@RequestMapping(value = "/reaction", method = RequestMethod.GET)
-	public Reaction reaction(@RequestParam(value = "type") String type) {
+	public Reaction reaction(@RequestParam(value = "type", defaultValue = "notfound") String type) {
 		try {
 			URL path = this.getClass().getClassLoader().getResource("reactions/" + type);
 			if (path == null) return new Reaction(0, BASE_PATH.formatted("notfound", "000.gif"));
