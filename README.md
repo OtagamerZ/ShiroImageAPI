@@ -8,5 +8,5 @@
 - Create a new folder inside resources (or choose one of the current)
 - Drag the file inside it
 - Run `check_sizes.sh`
-  - If adding GIFs to an existing folder, remove .checked
+  - If adding GIFs to an existing folder, remove `.checked` file
 - Done!
