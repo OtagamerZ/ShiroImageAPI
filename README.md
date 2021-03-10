@@ -7,6 +7,6 @@
 ## How to add new GIFs?
 - Create a new folder inside resources (or choose one of the current)
 - Drag the file inside it
-- Run check_sizes.sh
+- Run `check_sizes.sh`
   - If adding GIFs to an existing folder, remove .checked
 - Done!
