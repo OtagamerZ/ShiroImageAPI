@@ -17,9 +17,7 @@
 
 package api.handler;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,15 +30,17 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @RestController
 public class ReactionEndpoint {
+	private static final String BASE_PATH = "https://raw.githubusercontent.com/OtagamerZ/ShiroImageAPI/master/src/main/resources/reactions/%s/%s";
+
 	@RequestMapping(value = "/reaction", method = RequestMethod.GET)
-	public ResponseEntity<byte[]> reaction(@RequestParam(value = "type", defaultValue = "") String type) throws IOException {
+	public String reaction(@RequestParam(value = "type", defaultValue = "") String type) {
 		try {
 			if (type.isBlank()) {
 				URL pageUrl = this.getClass().getClassLoader().getResource("template.html");
@@ -60,14 +60,7 @@ public class ReactionEndpoint {
 					sb.append(item.formatted("?type=" + s, s));
 				}
 
-				HttpHeaders headers = new HttpHeaders();
-				headers.add("Content-Type", "text/html");
-
-				return new ResponseEntity<>(
-						page.formatted(sb.toString()).getBytes(StandardCharsets.UTF_8),
-						headers,
-						HttpStatus.OK
-				);
+				return page.formatted(sb.toString());
 			}
 
 			URL path = this.getClass().getClassLoader().getResource("reactions/" + type);
@@ -75,35 +68,23 @@ public class ReactionEndpoint {
 
 			File[] content = new File(path.getFile()).listFiles();
 			assert content != null;
-			List<File> reactions = Arrays.stream(content)
-					.filter(f -> f.isFile() && f.getName().endsWith(".gif"))
-					.sorted()
-					.collect(Collectors.toList());
-
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("Content-Type", "image/gif");
+			List<String> reactions = new ArrayList<>();
+			for (File file : content) {
+				if (file.isFile() && !file.getName().startsWith("."))
+					reactions.add(file.getName());
+			}
+			Collections.sort(reactions);
 
 			int index = new Random().nextInt(reactions.size());
-			return new ResponseEntity<>(
-					Files.readAllBytes(reactions.get(index).toPath()),
-					headers,
-					HttpStatus.OK
-			);
+			return new JSONObject() {{
+				put("id", index);
+				put("url", BASE_PATH.formatted(type, reactions.get(index)));
+			}}.toString();
 		} catch (IllegalArgumentException | IOException | URISyntaxException e) {
-			URL path = this.getClass().getClassLoader().getResource("reactions/notfound");
-			assert path != null;
-
-			File[] files = new File(path.getFile()).listFiles();
-			assert files != null;
-
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("Content-Type", "image/gif");
-
-			return new ResponseEntity<>(
-					Files.readAllBytes(files[0].toPath()),
-					headers,
-					HttpStatus.OK
-			);
+			return new JSONObject() {{
+				put("id", 404);
+				put("url", BASE_PATH.formatted("notfound", "000.gif"));
+			}}.toString();
 		}
 	}
 }
