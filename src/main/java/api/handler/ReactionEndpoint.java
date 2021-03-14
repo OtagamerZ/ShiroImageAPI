@@ -17,7 +17,6 @@
 
 package api.handler;
 
-import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,25 +25,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @RestController
 public class ReactionEndpoint {
-	private static final String BASE_PATH = "https://raw.githubusercontent.com/OtagamerZ/ShiroImageAPI/master/src/main/resources/reactions/%s/%s";
-
 	@RequestMapping(value = "/reaction", method = RequestMethod.GET)
-	public ResponseEntity<byte[]> reaction(@RequestParam(value = "type", defaultValue = "") String type, @RequestParam(value = "id", defaultValue = "") String id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public ResponseEntity<byte[]> reaction(@RequestParam(value = "type", defaultValue = "") String type, @RequestParam(value = "id", defaultValue = "") String id) throws IOException {
 		try {
 			if (type.isBlank()) {
 				URL pageUrl = this.getClass().getClassLoader().getResource("template.html");
@@ -99,11 +95,10 @@ public class ReactionEndpoint {
 			} catch (NumberFormatException e) {
 				int index = new Random().nextInt(reactions.size());
 
-				response.sendRedirect(request.getRequestURI() + "?type=" + type + "&id=" + index);
 				return new ResponseEntity<>(
 						Files.readAllBytes(reactions.get(index).toPath()),
 						headers,
-						HttpStatus.TEMPORARY_REDIRECT
+						HttpStatus.OK
 				);
 			}
 		} catch (IllegalArgumentException | IOException | URISyntaxException e) {
