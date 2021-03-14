@@ -54,15 +54,15 @@ echo 'Checked: '"$checked"' files'
 echo 'Removed: '"$removed"' files'
 echo 'Failed: '"$failed"' files'
 
-echo 'Do you want to commit those files? (s/n)'
+echo 'Do you want to commit those files? (y/n)'
 read -r commit
 
-while [[ "$commit" != "s" ]] && [[ "$commit" != "n" ]]; do
-	echo 'Please write either ''s'' or ''n'''
+while [[ "$commit" != "y" ]] && [[ "$commit" != "n" ]]; do
+	echo 'Please write either ''y'' or ''n'''
 	read -r commit
 done
 
-if [[ "$commit" == "s" ]]; then
+if [[ "$commit" == "y" ]]; then
 	git add .
 	git commit -m "Update"
 	git push
