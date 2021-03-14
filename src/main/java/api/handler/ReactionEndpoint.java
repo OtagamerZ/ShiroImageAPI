@@ -99,10 +99,11 @@ public class ReactionEndpoint {
 			} catch (NumberFormatException e) {
 				int index = new Random().nextInt(reactions.size());
 
+				response.sendRedirect(request.getRequestURI() + "?type=" + type + "&id=" + index);
 				return new ResponseEntity<>(
 						Files.readAllBytes(reactions.get(index).toPath()),
 						headers,
-						HttpStatus.OK
+						HttpStatus.TEMPORARY_REDIRECT
 				);
 			}
 		} catch (IllegalArgumentException | IOException | URISyntaxException e) {
