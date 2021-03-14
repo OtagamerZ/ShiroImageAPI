@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @RestController
 public class ReactionEndpoint {
 	@RequestMapping(value = "/reaction", method = RequestMethod.GET)
-	public ResponseEntity<byte[]> reaction(@RequestParam(value = "type", defaultValue = "") String type, @RequestParam(value = "id", defaultValue = "") String id) throws IOException {
+	public ResponseEntity<byte[]> reaction(@RequestParam(value = "type", defaultValue = "") String type) throws IOException {
 		try {
 			if (type.isBlank()) {
 				URL pageUrl = this.getClass().getClassLoader().getResource("template.html");
@@ -83,24 +83,13 @@ public class ReactionEndpoint {
 			HttpHeaders headers = new HttpHeaders();
 			headers.add("Content-Type", "image/gif");
 
-			try {
-				int index = Integer.parseInt(id);
-				if (index < 0 || index >= reactions.size()) throw new NumberFormatException();
+			int index = new Random().nextInt(reactions.size());
 
-				return new ResponseEntity<>(
-						Files.readAllBytes(reactions.get(index).toPath()),
-						headers,
-						HttpStatus.OK
-				);
-			} catch (NumberFormatException e) {
-				int index = new Random().nextInt(reactions.size());
-
-				return new ResponseEntity<>(
-						Files.readAllBytes(reactions.get(index).toPath()),
-						headers,
-						HttpStatus.OK
-				);
-			}
+			return new ResponseEntity<>(
+					Files.readAllBytes(reactions.get(index).toPath()),
+					headers,
+					HttpStatus.OK
+			);
 		} catch (IllegalArgumentException | IOException | URISyntaxException e) {
 			URL path = this.getClass().getClassLoader().getResource("reactions/notfound");
 			assert path != null;
