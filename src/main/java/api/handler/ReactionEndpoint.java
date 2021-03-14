@@ -18,29 +18,33 @@
 package api.handler;
 
 import org.json.JSONObject;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class ReactionEndpoint {
 	private static final String BASE_PATH = "https://raw.githubusercontent.com/OtagamerZ/ShiroImageAPI/master/src/main/resources/reactions/%s/%s";
 
 	@RequestMapping(value = "/reaction", method = RequestMethod.GET)
-	public String reaction(@RequestParam(value = "type", defaultValue = "") String type) {
+	public ResponseEntity<byte[]> reaction(@RequestParam(value = "type", defaultValue = "") String type, @RequestParam(value = "id", defaultValue = "") String id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			if (type.isBlank()) {
 				URL pageUrl = this.getClass().getClassLoader().getResource("template.html");
@@ -60,7 +64,14 @@ public class ReactionEndpoint {
 					sb.append(item.formatted("?type=" + s, s));
 				}
 
-				return page.formatted(sb.toString());
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Content-Type", "text/html");
+
+				return new ResponseEntity<>(
+						page.formatted(sb.toString()).getBytes(StandardCharsets.UTF_8),
+						headers,
+						HttpStatus.OK
+				);
 			}
 
 			URL path = this.getClass().getClassLoader().getResource("reactions/" + type);
@@ -68,23 +79,48 @@ public class ReactionEndpoint {
 
 			File[] content = new File(path.getFile()).listFiles();
 			assert content != null;
-			List<String> reactions = new ArrayList<>();
-			for (File file : content) {
-				if (file.isFile() && !file.getName().startsWith("."))
-					reactions.add(file.getName());
-			}
-			Collections.sort(reactions);
+			List<File> reactions = Arrays.stream(content)
+					.filter(f -> f.isFile() && f.getName().endsWith(".gif"))
+					.sorted()
+					.collect(Collectors.toList());
 
-			int index = new Random().nextInt(reactions.size());
-			return new JSONObject() {{
-				put("id", index);
-				put("url", BASE_PATH.formatted(type, reactions.get(index)));
-			}}.toString();
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Content-Type", "image/gif");
+
+			try {
+				int index = Integer.parseInt(id);
+				if (index < 0 || index >= reactions.size()) throw new NumberFormatException();
+
+				return new ResponseEntity<>(
+						Files.readAllBytes(reactions.get(index).toPath()),
+						headers,
+						HttpStatus.OK
+				);
+			} catch (NumberFormatException e) {
+				int index = new Random().nextInt(reactions.size());
+
+				response.sendRedirect(request.getRequestURI() + "?type=" + type + "&id=" + index);
+				return new ResponseEntity<>(
+						Files.readAllBytes(reactions.get(index).toPath()),
+						headers,
+						HttpStatus.OK
+				);
+			}
 		} catch (IllegalArgumentException | IOException | URISyntaxException e) {
-			return new JSONObject() {{
-				put("id", 404);
-				put("url", BASE_PATH.formatted("notfound", "000.gif"));
-			}}.toString();
+			URL path = this.getClass().getClassLoader().getResource("reactions/notfound");
+			assert path != null;
+
+			File[] files = new File(path.getFile()).listFiles();
+			assert files != null;
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Content-Type", "image/gif");
+
+			return new ResponseEntity<>(
+					Files.readAllBytes(files[0].toPath()),
+					headers,
+					HttpStatus.OK
+			);
 		}
 	}
 }

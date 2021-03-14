@@ -25,7 +25,8 @@ for i in $path; do
 		else
 			width="$(cut -d'x' -f1 <<<"$size")"
 			height="$(cut -d'x' -f2 <<<"$size")"
-			if [ "$width" -lt 400 ] || [ "$height" -lt 200 ]; then
+			mb="$(du -m "$img" | cut -f1)"
+			if [ "$width" -lt 400 ] || [ "$height" -lt 200 ] || [ "$mb" -gt 8 ]; then
 				echo 'Removing '"$img"
 				rm "$img"
 				removed=$((removed + 1))
