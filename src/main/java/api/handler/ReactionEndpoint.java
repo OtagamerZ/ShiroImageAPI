@@ -84,7 +84,6 @@ public class ReactionEndpoint {
 			headers.add("Content-Type", "image/gif");
 
 			int index = new Random().nextInt(reactions.size());
-
 			return new ResponseEntity<>(
 					Files.readAllBytes(reactions.get(index).toPath()),
 					headers,
