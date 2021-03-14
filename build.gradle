@@ -22,7 +22,8 @@ repositories {
 }
 
 dependencies {
-	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.3.4.RELEASE'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.3.4.RELEASE'
+	implementation group: 'org.json', name: 'json', version: '20210307'
 	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.3.4.RELEASE'
 }
 
