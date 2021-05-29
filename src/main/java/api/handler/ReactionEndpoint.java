@@ -43,7 +43,7 @@ public class ReactionEndpoint {
 
 	@RequestMapping(value = "/reaction", method = RequestMethod.GET)
 	public String reaction(@RequestParam(value = "type", defaultValue = "") String type, HttpServletRequest res) {
-		System.out.println(res.getRequestURI());
+		System.out.println(res.getRequestURL().toString());
 		try {
 			if (type.isBlank()) {
 				URL pageUrl = this.getClass().getClassLoader().getResource("template.html");
