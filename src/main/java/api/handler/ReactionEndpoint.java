@@ -65,10 +65,9 @@ public class ReactionEndpoint {
 				return page.formatted(sb.toString());
 			}
 
+			System.out.println("reactions/" + type);
 			URL path = this.getClass().getClassLoader().getResource("reactions/" + type);
-			System.out.println(path);
 			if (path == null) throw new IllegalArgumentException();
-			System.out.println("test");
 
 			File[] content = new File(path.getFile()).listFiles();
 			assert content != null;
