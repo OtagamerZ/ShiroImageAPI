@@ -41,7 +41,6 @@ public class ReactionEndpoint {
 
 	@RequestMapping(value = "/reaction", method = RequestMethod.GET)
 	public String reaction(@RequestParam(value = "type", defaultValue = "") String type) {
-		System.out.println(type);
 		try {
 			if (type.isBlank()) {
 				URL pageUrl = this.getClass().getClassLoader().getResource("template.html");
@@ -82,6 +81,7 @@ public class ReactionEndpoint {
 				put("url", BASE_PATH.formatted(type, reactions.get(index)));
 			}}.toString();
 		} catch (IllegalArgumentException | IOException | URISyntaxException e) {
+			e.printStackTrace();
 			return new JSONObject() {{
 				put("id", 404);
 				put("url", BASE_PATH.formatted("notfound", "000.gif"));
