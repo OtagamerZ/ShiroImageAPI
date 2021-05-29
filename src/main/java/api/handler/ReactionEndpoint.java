@@ -65,7 +65,6 @@ public class ReactionEndpoint {
 				return page.formatted(sb.toString());
 			}
 
-			System.out.println("reactions/" + type);
 			URL path = this.getClass().getClassLoader().getResource("reactions/" + type);
 			if (path == null) throw new IllegalArgumentException();
 
