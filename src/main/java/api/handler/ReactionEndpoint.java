@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -40,7 +42,8 @@ public class ReactionEndpoint {
 	private static final String BASE_PATH = "https://raw.githubusercontent.com/OtagamerZ/ShiroImageAPI/master/src/main/resources/reactions/%s/%s";
 
 	@RequestMapping(value = "/reaction", method = RequestMethod.GET)
-	public String reaction(@RequestParam(value = "type", defaultValue = "") String type) {
+	public String reaction(@RequestParam(value = "type", defaultValue = "") String type, HttpServletRequest res) {
+		System.out.println(res.getRequestURI());
 		try {
 			if (type.isBlank()) {
 				URL pageUrl = this.getClass().getClassLoader().getResource("template.html");
@@ -81,7 +84,6 @@ public class ReactionEndpoint {
 				put("url", BASE_PATH.formatted(type, reactions.get(index)));
 			}}.toString();
 		} catch (IllegalArgumentException | IOException | URISyntaxException e) {
-			e.printStackTrace();
 			return new JSONObject() {{
 				put("id", 404);
 				put("url", BASE_PATH.formatted("notfound", "000.gif"));
