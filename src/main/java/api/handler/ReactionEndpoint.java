@@ -43,7 +43,6 @@ public class ReactionEndpoint {
 
 	@RequestMapping(value = "/reaction", method = RequestMethod.GET)
 	public String reaction(@RequestParam(value = "type", defaultValue = "") String type, HttpServletRequest res) {
-		System.out.println(res.getRequestURL().toString());
 		try {
 			if (type.isBlank()) {
 				URL pageUrl = this.getClass().getClassLoader().getResource("template.html");
@@ -67,7 +66,9 @@ public class ReactionEndpoint {
 			}
 
 			URL path = this.getClass().getClassLoader().getResource("reactions/" + type);
+			System.out.println(path);
 			if (path == null) throw new IllegalArgumentException();
+			System.out.println("test");
 
 			File[] content = new File(path.getFile()).listFiles();
 			assert content != null;
