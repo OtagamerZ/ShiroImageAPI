@@ -1,32 +1,16 @@
-/*
- * This file is part of Shiro J Bot.
- *
- *     Shiro J Bot is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     Shiro J Bot is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with Shiro J Bot.  If not, see <https://www.gnu.org/licenses/>
- */
-
 package api.handler;
 
-import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -42,7 +26,7 @@ public class ReactionEndpoint {
 	private static final String BASE_PATH = "https://raw.githubusercontent.com/OtagamerZ/ShiroImageAPI/master/src/main/resources/reactions/%s/%s";
 
 	@RequestMapping(value = "/reaction", method = RequestMethod.GET)
-	public String reaction(@RequestParam(value = "type", defaultValue = "") String type, HttpServletRequest res) {
+	public ResponseEntity<String> reaction(@RequestParam(value = "type", defaultValue = "") String type, HttpServletRequest res) {
 		try {
 			if (type.isBlank()) {
 				URL pageUrl = this.getClass().getClassLoader().getResource("template.html");
@@ -62,7 +46,7 @@ public class ReactionEndpoint {
 					sb.append(item.formatted("?type=" + s, s));
 				}
 
-				return page.formatted(sb.toString());
+				return ResponseEntity.ok(page.formatted(sb.toString()));
 			}
 
 			URL path = this.getClass().getClassLoader().getResource("reactions/" + type);
@@ -78,15 +62,14 @@ public class ReactionEndpoint {
 			Collections.sort(reactions);
 
 			int index = new Random().nextInt(reactions.size());
-			return new JSONObject() {{
-				put("id", index);
-				put("url", BASE_PATH.formatted(type, reactions.get(index)));
-			}}.toString();
+
+			return ResponseEntity.status(HttpStatus.FOUND)
+					.location(URI.create(BASE_PATH.formatted(type, reactions.get(index))))
+					.build();
 		} catch (IllegalArgumentException | IOException | URISyntaxException e) {
-			return new JSONObject() {{
-				put("id", 404);
-				put("url", BASE_PATH.formatted("notfound", "000.gif"));
-			}}.toString();
+			return ResponseEntity.status(HttpStatus.FOUND)
+					.location(URI.create(BASE_PATH.formatted("notfound", "000.gif")))
+					.build();
 		}
 	}
 }
