@@ -1,7 +1,7 @@
 # ShiroImageAPI
 ## How to start it?
 - Clone this repository
-- Run `gradlew run`
+- Run `gradlew bootRun`
 - Done!
 
 ## How to add new GIFs?
